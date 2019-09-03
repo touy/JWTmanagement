@@ -2,7 +2,7 @@ import crypto from 'crypto';
 import fs from 'fs';
 class Keygen {
     constructor() {
-        let secret = "";
+        let secret = "touyaraLaoAppS";
         crypto.generateKeyPair('rsa', {
             modulusLength: 4096,
             publicKeyEncoding: {

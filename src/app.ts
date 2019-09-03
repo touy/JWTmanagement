@@ -92,7 +92,7 @@ class App {
         let user = req.body;
         let token = jwt.sign(user, this.privateKey.trim(), { algorithm: 'RS256' });
         this.rclient.set(token, this.publicKey.trim(), 'EX', 1 * 60 * 60 * 24 * 365);
-        res.status(200).json({ stats: 'OK', token: token });
+        res.status(200).json({ status: 'OK', token: token });
     }
     renewToken(req: express.Request, res: express.Response) {
         let token = req.body.token;
@@ -105,7 +105,7 @@ class App {
                 this.rclient.del(token);
                 token = jwt.sign(user, this.privateKey.trim(), { algorithm: 'RS256' });
                 this.rclient.set(token, reply.toString(), 'EX', 1 * 60 * 60 * 24 * 365);
-                res.status(200).json({ stats: 'OK', token: token });
+                res.status(200).json({ status: 'OK', token: token });
             }
         });
     }
