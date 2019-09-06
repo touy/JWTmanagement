@@ -47,10 +47,10 @@ class App {
     publicKey: string;
     constructor() {
         try {
-            
+
         } catch (error) {
             console.log(error);
-            
+
         }
         this.fs1 = fs.readFileSync('../private.key');
         this.fs2 = fs.readFileSync('../public.key');
@@ -106,7 +106,7 @@ class App {
         let token = req.body.token;
         this.rclient.get(token, (err, reply) => {
             if (err) {
-                res.json({ error: err });
+                res.status(404).json({ status: 'error', error: err });
             }
             else if (reply) {
                 let user = jwt.verify(token, reply);
@@ -114,8 +114,8 @@ class App {
                 token = jwt.sign(user, this.privateKey.trim(), { algorithm: 'RS256' });
                 this.rclient.set(token, reply.toString(), 'EX', 1 * 60 * 60 * 24 * 365);
                 res.status(200).json({ status: 'OK', token: token });
-            }else{
-                res.json({ error: 'token not registered' });
+            } else {
+                res.status(404).json({ status: 'error', error: 'token not registered' });
             }
         });
     }
@@ -128,29 +128,29 @@ class App {
                 res.json({ status: 'ok', token: token });
             } else if (err) {
                 console.log(err);
-                res.json({ error: err });
-            }else{
-                res.json({ error: 'token not registered' });
+                res.status(404).json({ status: 'error', error: err });
+            } else {
+                res.status(404).json({ status: 'error', error: 'token not registered' });
             }
         });
     }
     getInfoByToken(req: express.Request, res: express.Response) {
         let token = req.body.token;
         //console.log(token);
-        
+
         this.rclient.get(token, (err, reply) => {
             console.log(reply);
             console.log(err);
-            
+
             if (reply) {
                 let user = jwt.verify(token, reply) as any;
                 console.log(user);
                 res.json({ status: 'ok', user: user, token: token });
             } else if (err) {
                 console.log(err);
-                res.json({ error: err });
-            }else{
-                res.json({ error: 'token not registered' });
+                res.status(404).json({ status: 'error', error: err });
+            } else {
+                res.status(404).json({ status: 'error', error: 'token not registered' });
             }
         });
     }
@@ -162,9 +162,9 @@ class App {
                 res.json({ status: 'ok' });
             } else if (err) {
                 console.log(err);
-                res.json({ error: err });
-            }else{
-                res.json({ error: 'token not registered' });
+                res.status(404).json({ status: 'error', error: err });
+            } else {
+                res.status(404).json({ status: 'error', error: 'token not registered' });
             }
         });
     }
