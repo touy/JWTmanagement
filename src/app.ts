@@ -114,6 +114,8 @@ class App {
                 token = jwt.sign(user, this.privateKey.trim(), { algorithm: 'RS256' });
                 this.rclient.set(token, reply.toString(), 'EX', 1 * 60 * 60 * 24 * 365);
                 res.status(200).json({ status: 'OK', token: token });
+            }else{
+                res.json({ error: 'token not registered' });
             }
         });
     }
@@ -127,12 +129,19 @@ class App {
             } else if (err) {
                 console.log(err);
                 res.json({ error: err });
+            }else{
+                res.json({ error: 'token not registered' });
             }
         });
     }
     getInfoByToken(req: express.Request, res: express.Response) {
         let token = req.body.token;
+        //console.log(token);
+        
         this.rclient.get(token, (err, reply) => {
+            console.log(reply);
+            console.log(err);
+            
             if (reply) {
                 let user = jwt.verify(token, reply) as any;
                 console.log(user);
@@ -140,6 +149,8 @@ class App {
             } else if (err) {
                 console.log(err);
                 res.json({ error: err });
+            }else{
+                res.json({ error: 'token not registered' });
             }
         });
     }
@@ -152,6 +163,8 @@ class App {
             } else if (err) {
                 console.log(err);
                 res.json({ error: err });
+            }else{
+                res.json({ error: 'token not registered' });
             }
         });
     }
