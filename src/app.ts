@@ -40,12 +40,20 @@ class App {
     nanoconf: Nano.Configuration | undefined;
     serverurl: string | undefined;
     rclient: RedisClient;
-    fs1 = fs.readFileSync('../private.key');
-    fs2 = fs.readFileSync('../public.key');
+    fs1: Buffer = fs.readFileSync('../private.key');
+    fs2: Buffer = fs.readFileSync('../public.key');
     readonly secret = '';
     privateKey: string;
     publicKey: string;
     constructor() {
+        try {
+            
+        } catch (error) {
+            console.log(error);
+            
+        }
+        this.fs1 = fs.readFileSync('../private.key');
+        this.fs2 = fs.readFileSync('../public.key');
         this.privateKey = this.fs1.toString();
         this.publicKey = this.fs2.toString();
         this.rclient = redis.createClient();
@@ -57,21 +65,21 @@ class App {
         console.log(path.resolve(__dirname.replace('src', '').replace('dist', '') + 'public'));
         console.log(path.resolve(__dirname.replace('src', '').replace('dist', '') + 'public'));
         console.log(`start ${new Date().toString()}`);
-        
+
         this.app.use('/public', express.static(path.resolve(__dirname.replace('src', '').replace('dist', '') + 'public')));
-        
-        this.registerToken=this.registerToken.bind(this);
+
+        this.registerToken = this.registerToken.bind(this);
         this.app.post('/', this.registerToken);
         this.app.post('/registerToken', this.registerToken);
 
-        this.verifyToken=this.verifyToken.bind(this);
-        this.app.post('/verifyToken',this.verifyToken);
-        
-        this.getInfoByToken=this.getInfoByToken.bind(this);
-        this.app.post('/getInfoByToken',this.getInfoByToken);
+        this.verifyToken = this.verifyToken.bind(this);
+        this.app.post('/verifyToken', this.verifyToken);
 
-        this.renewToken=this.renewToken.bind(this);
-        this.app.post('/renewToken',this.renewToken);
+        this.getInfoByToken = this.getInfoByToken.bind(this);
+        this.app.post('/getInfoByToken', this.getInfoByToken);
+
+        this.renewToken = this.renewToken.bind(this);
+        this.app.post('/renewToken', this.renewToken);
 
         this.app.use(function (err, req, res, next) {
             let debug = true;
@@ -115,7 +123,7 @@ class App {
             if (reply) {
                 let user = jwt.verify(token, reply);
                 console.log(user);
-                res.json({ status: 'ok',token:token });
+                res.json({ status: 'ok', token: token });
             } else if (err) {
                 console.log(err);
                 res.json({ error: err });
@@ -128,7 +136,7 @@ class App {
             if (reply) {
                 let user = jwt.verify(token, reply) as any;
                 console.log(user);
-                res.json({status:'ok',user:user,token:token});
+                res.json({ status: 'ok', user: user, token: token });
             } else if (err) {
                 console.log(err);
                 res.json({ error: err });
