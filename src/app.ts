@@ -126,7 +126,7 @@ class App {
         let token = req.body.token;
         this.rclient.get(token, (err, reply) => {
             if (reply) {
-                let user = jwt.verify(token, reply);
+                let user = jwt.verify(token, reply) as any;
                 console.log(user);
                 res.json({status:'ok',user:user,token:token});
             } else if (err) {
